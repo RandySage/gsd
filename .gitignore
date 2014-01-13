@@ -1,3 +1,7 @@
+
+# Next line is virtual environment (in root folder)
+venv
+
 *.py[cod]
 
 # C extensions
