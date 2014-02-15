@@ -1,7 +1,10 @@
-django==1.6
-south
-python-memcached 
-django-databrowse
-ipython
-pytz
+#django==1.6
+#south
+#python-memcached 
+#django-databrowse
+#pytz
+
 sphinx
+github3.py
+
+ipython
