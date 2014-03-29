@@ -1,0 +1,7 @@
+{
+    "address": "me@example.com",
+    "username": "me",
+    "password": "ThisIsMyPassword",
+
+    "secure_mail_server": "mail.example.com",
+}
