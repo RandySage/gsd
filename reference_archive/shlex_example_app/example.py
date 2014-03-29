@@ -1,3 +1,11 @@
+# Taken from Stack Overflow (http://stackoverflow.com/a/9340596/527489) 
+# answer by Oleh Prypin (https://stackoverflow.com/users/241039/oleh-prypin)
+#
+# licensed under cc by-sa 3.0
+# (http://creativecommons.org/licenses/by-sa/3.0/) 
+# with attribution required
+# (http://blog.stackoverflow.com/2009/06/attribution-required/)
+
 import readline
 import shlex
 
