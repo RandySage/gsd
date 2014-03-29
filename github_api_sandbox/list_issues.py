@@ -26,5 +26,14 @@ else:
 
 gh = login(username, password=pw)
 
+repo_pers = gh.repository(owner='ransage',repository='R_personal')
+repo_pers.create_i
+
+sys.exit()
+
+for a in gh.iter_issues():
+    print '%s, %s, %s, %s' % (a.repository[1], a.title, a.milestone, '') # a.label)
+
+
 for a in gh.iter_issues():
     print '%s - %s' % (a.repository[1], a.title)
