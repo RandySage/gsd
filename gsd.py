@@ -10,6 +10,11 @@ from github3 import login
 import sys
 from thirdparty.query_yes_no import query_yes_no
 
+
+import json
+with open('settings.json') as json_file:
+    settings = json.load(json_file)
+
 # GENERAL LIST
 # TODO - clean up import locations & syntax
 
@@ -79,24 +84,39 @@ Example:
 n 'Organize closet' '' '3,6' # Creates task with no body and two labels
 
 -------Other commands-------
+        ('exit','x','quit','q'):
+            # Ends loop execution, exits program
+            break 
+        
+        ('help', 'h'):
+            print(help_string())
+        
+        ('new', 'n'):
+            create_issue(cmd[1:], 'action')
+        
+        'nd':
+            create_issue(cmd[1:], 'defer')
+        
         'label':
-            create_label(cmd[1]=label_name)
+            create_label(cmd[1])
 
         'll':
-            print_labels_list()
-
-        'll':
-            print_labels_list()
+            list_labels()
 
         'li':
-            list_open_issues()
+            list_issues('open')
+
+        'lic':
+            list_issues('closed')
 
         'wipe':
-            wipe_and_close_issue(cmd[1]=issue_num)
+            wipe_and_close_issue(cmd[1])
 
         'close':
-            close_issue(cmd[1]=issue_num, cmd[2]=reason_text)
-
+            if len(cmd) > 2:
+                close_issue(cmd[1], cmd[2])
+            else:
+                close_issue(cmd[1])
 '''
 
 def create_new_issue_label_list(label_num_text):
@@ -133,10 +153,17 @@ def display_formatted_issue(issue):
            )
           )
 
-def list_open_issues():
-    for issue in gh.iter_issues():
-        display_formatted_issue(issue)
-
+def list_issues(requested_state=None):
+    if not requested_state in ('open','closed'):
+        raise ValueException("Function only allows 'open' or 'closed'")
+    # List in the order of active repositories
+    for rep_path in settings['active_repos']:
+        print("=====================%s====================="%rep_path)
+        user, rep_name = rep_path.split('/')
+        rep = gh.repository(user, rep_name)
+        for issue in rep.iter_issues(assignee=username,
+                                     state=requested_state):
+            display_formatted_issue(issue)
 
 def create_body_string(text_to_insert):
     body_string_preface = '''WARNING: python auto-generated this text and it is likely to get edited and/or deleted.
@@ -221,7 +248,7 @@ def create_issue(arg_list, milestone_text='action'):
     else:
         print('!!! Failed to create issue %s !!!' % title_string)
 
-def print_labels_list():
+def list_labels():
     print('--- Labels with numbers ---')
     for index in range(0,len(labels_list)):
         print('%d: %s'%(index, labels_list[index]))
@@ -251,9 +278,11 @@ if __name__ == "__main__":
     print('Enter a command to do something, e.g. `create name price`.')
     print('To get help, enter `help`.')
 
-    print_labels_list()
+    list_labels()
     while True:
-        print('Active project/repo: %s' % repo)
+        print('\n==========================================')
+        print(  '==========================================')
+        print('User %s and Active project/repo: %s' % (username, repo))
 
         cmd = shlex.split(raw_input('> '),True) # True enables comments
 
@@ -277,16 +306,18 @@ if __name__ == "__main__":
             create_label(cmd[1])
 
         elif cmd[0]=='ll':
-            print_labels_list()
+            list_labels()
 
         elif cmd[0]=='li':
-            list_open_issues()
+            list_issues('open')
+
+        elif cmd[0]=='lic':
+            list_issues('closed')
 
         elif cmd[0]=='wipe':
             wipe_and_close_issue(cmd[1])
 
         elif cmd[0]=='close':
-            print cmd
             if len(cmd) > 2:
                 close_issue(cmd[1], cmd[2])
             else:
