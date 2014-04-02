@@ -92,10 +92,10 @@ n 'Organize closet' '' '3,6' # Creates task with no body and two labels
             print(help_string())
         
         ('new', 'n'):
-            create_issue(cmd[1:], 'action')
+            create_issue(cmd[1:], 'action') # cmd[1:] is: title [, body [, label_numbers_list]]
         
         'nd':
-            create_issue(cmd[1:], 'defer')
+            create_issue(cmd[1:], 'defer') # cmd[1:] is: title [, body [, label_numbers_list]]
         
         'label':
             create_label(cmd[1])
@@ -297,10 +297,10 @@ if __name__ == "__main__":
             print(help_string())
         
         elif cmd[0] in ('new', 'n'):
-            create_issue(cmd[1:], 'action')
+            create_issue(cmd[1:], 'action') # cmd[1:] is: title [, body [, label_numbers_list]]
         
         elif cmd[0]=='nd':
-            create_issue(cmd[1:], 'defer')
+            create_issue(cmd[1:], 'defer') # cmd[1:] is: title [, body [, label_numbers_list]]
         
         elif cmd[0]=='label':
             create_label(cmd[1])
