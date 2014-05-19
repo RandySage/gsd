@@ -42,7 +42,13 @@ pw = getpass.getpass("Password for %s: " % username)
 
 gh = login(username, password=pw)
 
-repo_pers = gh.repository(owner='ransage',repository='R_personal')
+try:
+    repo_pers = gh.repository(owner='ransage',repository='R_personal')
+except Exception as ex:
+    print "Failed to connect to github.com due to exception:"
+    print str(ex)
+    print "Exiting..."
+    sys.exit()
 
 repo = repo_pers  # TODO allow user to select repo
 
