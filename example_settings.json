@@ -1,7 +1,37 @@
 {
+    "active_repos": [ "gh_user/R_personal"
+                     , "gh_user/v_proj"
+                     , "gh_user/GeneralOrAdmin"
+                     , "gh_user/B_personal"
+    ],
+
+    "contexts": [ "Home"
+                , "Errands"
+                , "V"
+                , "Q"
+    ],
+
+    "repo_abbrevs": {
+                     "gh_user/R_personal": "P"
+                     , "gh_user/v_proj": "V"
+                     , "gh_user/GeneralOrAdmin": "TH"
+                     , "gh_user/B_personal": "bn"
+                     } ,
+
     "address": "me@example.com",
     "username": "me",
     "password": "ThisIsMyPassword",
+
+    "folder_prefix": "INBOX.",
+    "sender": "dunAgent",
+
+    "key_prefix": "DUN_",
+    "key_num_digits": "4",
+    "L_brac": "[",
+    "R_brac": "]",
+
+    "config_filename": "~/.config/.gsd",
+
 
     "secure_mail_server": "mail.example.com",
 }
