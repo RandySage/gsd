@@ -62,7 +62,6 @@ if len(sys.argv) > 1:
 else:
     username = 'ransage'
 
- 
 pw = getpass.getpass("Password for %s: " % username)
 
 gh = login(username, password=pw)
@@ -276,17 +275,17 @@ def close_issue(issue_num, reason_text=''):
         return None
 
 def create_issue(arg_list, milestone_text='action'):
-    if len(arg_list) == 0:
+    if len(arg_list) < 1:       # No first arg
         print('No title provided - not doing anything')
         return False
 
     title_string = arg_list[0]
-    if( len(arg_list) < 1 ):
+    if( len(arg_list) < 2 ):    # 2nd arg is body_text
         body_text = ''
     else:
         body_text = create_body_string(arg_list[1])
 
-    if( len(arg_list) < 2 ):
+    if( len(arg_list) < 3 ):    # 3rd arg is labels_list
         labels_list = []
     else:
         try:
