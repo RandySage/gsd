@@ -104,50 +104,37 @@ generate_labels_list() # Generate it initially
 def help_string():
     return '''
 Help:
-
--------New issue-------
-new title_str [body_str [label_nums_list]] 
-
- - substitute 'nd' for 'new' for new deferred action
- - 'n' can be used for 'new'
-
-Example:
-n 'Organize closet' '' '3,6' # Creates task with no body and two labels
-
 -------Other commands-------
         ('exit','x','quit','q'):
             # Ends loop execution, exits program
             break 
-        
         ('help', 'h'):
             print(help_string())
-        
         ('new', 'n'):
             create_issue(cmd[1:], 'action') # cmd[1:] is: title [, body [, label_numbers_list]]
-        
         'nd':
             create_issue(cmd[1:], 'defer') # cmd[1:] is: title [, body [, label_numbers_list]]
-        
         'label':
             create_label(cmd[1])
-
         'll':
             list_labels()
-
         'li':
             list_issues('open')
-
         'lic':
             list_issues('closed')
-
         'wipe':
             wipe_and_close_issue(cmd[1])
-
         'close':
             if len(cmd) > 2:
                 close_issue(cmd[1], cmd[2])
             else:
                 close_issue(cmd[1])
+-------New issue-------
+new title_str [body_str [label_nums_list]] 
+ - substitute 'nd' for 'new' for new deferred action
+ - 'n' can be used for 'new'
+Example:
+n 'Organize closet' '' '3,6' # Creates task with no body and two labels
 '''
 
 def create_new_issue_label_list(label_num_text):
@@ -355,6 +342,50 @@ def create_label(new_label_name, color_string = '#bbbb00'):
     else:
         print('Not attempting to create label due to user response')
 
+
+def process_cmd(cmd):
+    if cmd[0] in ('help', 'h'):
+        print(help_string())
+
+    elif cmd[0] in ('new', 'n'):
+        create_issue(cmd[1:], 'action') # cmd[1:] is: title [, body [, label_numbers_list]]
+
+    elif cmd[0]=='nd':
+        create_issue(cmd[1:], 'defer') # cmd[1:] is: title [, body [, label_numbers_list]]
+
+    elif cmd[0]=='label':
+        create_label(cmd[1])
+
+    elif cmd[0]=='ll':
+        list_labels()
+
+    elif cmd[0]=='li':
+        list_issues('open')
+
+    elif cmd[0]=='lic':
+        list_issues('closed')
+
+    elif cmd[0]=='wipe':
+        wipe_and_close_issue(cmd[1])
+
+    elif cmd[0]=='close':
+        if len(cmd) > 2:
+            close_issue(cmd[1], cmd[2])
+        else:
+            close_issue(cmd[1])
+
+    # TODO - create better method for generating doc from app logic or vice versa 
+    #             such as docparse plus iterative calls to app from interactive
+    # TODO - add option for creating incubate
+
+    # ...
+
+    else:
+        print('Unknown command: {}'.format(cmd))
+
+    # end if/elif/elif...
+# end process_cmd
+
 if __name__ == "__main__":
     import readline
     import shlex
@@ -368,58 +399,30 @@ if __name__ == "__main__":
         print(  '==========================================')
         print('User %s and Active project/repo: %s' % (username, repo))
 
-        cmd = shlex.split(raw_input('> '),True) # True enables comments
-
-        if len(cmd) == 0:
-            pass
-
-        elif cmd[0] in ('exit','x','quit','q'):
-            # Ends loop execution, exits program
-            # TODO - implement atexit callback to clean up
-            shelf['app_running'] = False
-            print 'Shelf max id: %d' % shelf['max_id_num']
-            shelf.close()
-            break 
-        
-        elif cmd[0] in ('help', 'h'):
-            print(help_string())
-        
-        elif cmd[0] in ('new', 'n'):
-            create_issue(cmd[1:], 'action') # cmd[1:] is: title [, body [, label_numbers_list]]
-        
-        elif cmd[0]=='nd':
-            create_issue(cmd[1:], 'defer') # cmd[1:] is: title [, body [, label_numbers_list]]
-        
-        elif cmd[0]=='label':
-            create_label(cmd[1])
-
-        elif cmd[0]=='ll':
-            list_labels()
-
-        elif cmd[0]=='li':
-            list_issues('open')
-
-        elif cmd[0]=='lic':
-            list_issues('closed')
-
-        elif cmd[0]=='wipe':
-            wipe_and_close_issue(cmd[1])
-
-        elif cmd[0]=='close':
-            if len(cmd) > 2:
-                close_issue(cmd[1], cmd[2])
-            else:
-                close_issue(cmd[1])
-
-        # TODO - create better method for generating doc from app logic or vice versa 
-        #             such as docparse plus iterative calls to app from interactive
-        # TODO - add option for creating incubate
-        
-        # ...
-        
+        try:
+            cmd = shlex.split(raw_input('> '),True) # True enables comments
+        except ValueError as error:
+            print 'Failed to parse with exception: ', error
         else:
-            print('Unknown command: {}'.format(cmd))
+            if len(cmd) == 0:
+                pass
+
+            elif cmd[0] in ('exit','x','quit','q'):
+                # Ends loop execution, exits program
+                # TODO - implement atexit callback to clean up
+                shelf['app_running'] = False
+                print 'Shelf max id: %d' % shelf['max_id_num']
+                shelf.close()
+                break 
+
+            else:
+                process_cmd(cmd)
+        # End try/except/else
+    # End while true
     print('Done')
 
-print('End of file')
+# end if __name__ == "__main__":
+
+if debug_on:
+    print('End of file')
 
