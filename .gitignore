@@ -1,5 +1,6 @@
 
 settings.json
+passwd.txt
 
 # Next line is virtual environment (in root folder)
 venv

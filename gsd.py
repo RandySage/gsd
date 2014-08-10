@@ -25,7 +25,7 @@ shelf_filename = os.path.expanduser(s['config_filename'])
 shelf = shelve.open(shelf_filename)
 if shelf.has_key('app_running') and shelf['app_running']:
     print 'Application has detected a messy shutdown; manual action required'
-    print 'Quitting (TODO - implement clean-up)'
+    print 'Quitting (TODO - implement clean-up ; try ./unlockShelf.py)'
     sys.exit(-1)
 
 shelf['app_running'] = True
@@ -62,7 +62,13 @@ if len(sys.argv) > 1:
 else:
     username = 'ransage'
 
-pw = getpass.getpass("Password for %s: " % username)
+
+passwd_filename = 'passwd.txt'
+if os.path.isfile(passwd_filename):
+    with open(passwd_filename) as f:
+        pw = f.read()
+else:
+    pw = getpass.getpass("Password for %s: " % username)
 
 gh = login(username, password=pw)
 
